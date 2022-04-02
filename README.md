@@ -1,4 +1,4 @@
-# cienciadedados-estatistica
+# Ciência de Dados - Estatística
 Pós Graduação de Ciência de Dados e Machine Learning
 
 * Matéria de Análise Estatística de Dados *
