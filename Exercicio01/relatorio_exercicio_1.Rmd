@@ -1,0 +1,83 @@
+---
+title: "Análise Estatística de dados"
+subtitle: "Nome Completo"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercício 1
+
+Para a distriuição de frequências recebida, 
+
+Primeiramente, vamos carregar o arquivo na tabela
+
+```{r}
+# Associacao do arquivo com a tabela exercicio
+tabela_exercicio <- read.csv2("Exercicio1.csv")
+
+# criacao de uma coluna (vetor) com a media das velocidades dos intervalos
+tabela_exercicio$media_velocidades <- c(19/2, (29+20)/2,(39+30)/2, (49+40)/2, (59+50)/2, (69+60)/2, (79+70)/2,(89+80)/2, (99+90)/2, (109+100)/2, (119+110)/2, (129+120)/2, (139+130)/2, (199+140)/2)
+
+```
+
+E agora vamos contar o número de linhas que o arquivo tem
+
+```{r}
+# contagem do numero de linhas da tabela na variavel nlinhas
+nlinhas <- nrow(tabela_exercicio);
+```
+
+é possível verificar que o arquivo possui `r nlinhas` linhas.
+
+Em seguida, cria-se mais uma coluna na tabela. Primeiramente, com valor zero. Depois o produto da frequência com a média das velocidades. Assim, é possível somar todas as frequências:
+
+```{r}
+# criacao da coluna que representa o  somatario da frequencia vezes a media das velocidades 
+tabela_exercicio$SomavFreq <- 0
+for(i in 1:nlinhas){tabela_exercicio$SomavFreq[i] <- sum(tabela_exercicio$Contagem.diaria[i]*tabela_exercicio$media_velocidades[i])}
+
+# soma de todas as frequencias, representando o numero N
+N = sum(tabela_exercicio$Contagem.diaria)
+```
+e, portanto, o número total N é `r N`.
+
+Com o número total de dados somados (o valor de N), podemos tirar a média da distribuição:
+
+```{r}
+# Calculo da media das frequencias
+Media  = sum(tabela_exercicio$SomavFreq)/N
+```
+Tendo a média, o valor de `r Media`.
+
+## Desvios da média
+
+Para encontrar a variância e o desvio-padrão, primeiramente fazemos a soma ao quadrado dos erros:
+
+```{r}
+# Soma ao quadrado dos erros
+tabela_exercicio$SS <- 0
+for(i in 1:nlinhas){tabela_exercicio$SS[i] <- sum((tabela_exercicio$media_velocidades[i] - Media)^2*tabela_exercicio$Contagem.diaria[i])}
+```
+
+E agora pode-se escrever o valor da variância
+```{r}
+# variancia
+variancia <- sum(tabela_exercicio$SS)/(N-1)
+```
+com o valor de `r variancia`, e o desvio-padrão,
+```{r}
+# desvio padrao
+desvio_padrao <- sqrt(variancia)
+```
+com valor de `r desvio_padrao`.
+
+Para finalizar, pode ser feito um gráfico com a distribuição das frequências para cada faixa de velocidade:
+
+```{r}
+faixas <- c("1-19","20-29","30-39","40-49","50-59","60-69","70-79","80-89","90-99","100-109","110-119","120-129","130-139","140-199")
+barplot(tabela_exercicio$Contagem.diaria, main = "Distribuicao de velocidades",xlab = "Faixa de Velocidades (km/h)",ylab="Frequencia",col='#69b3a2',names.arg = faixas)
+```
